@@ -1,5 +1,4 @@
-import os
-import sys
+import os, sys
 
 if getattr(sys, "frozen", False):
     APP_PATH = sys._MEIPASS
