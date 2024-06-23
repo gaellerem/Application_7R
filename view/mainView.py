@@ -23,6 +23,8 @@ class MainWindow(QMainWindow):
         self.maj_btns = QButtonGroup()
         group_buttons(self.maj_btns, self.findChild(QWidget, "fournisseurs").findChildren(QPushButton))
 
+        self.findChild(QPushButton, 'invoiceItem').clicked.connect(self.choose_invoice)
+
     def connect_buttons(self):
         self.changePageGroupBtns = QButtonGroup()
         changePageBtns = []
@@ -43,3 +45,14 @@ class MainWindow(QMainWindow):
 
     def page_changed(self, index:int):
         self.page = self.ui.stackedWidget.widget(index).objectName()
+
+    def choose_invoice(self):
+        invoices = ['invoice1', 'invoice2', 'invoice3']
+        dialog = ChooseInvoice(self, invoices)
+        dialog.show()
+        if dialog.exec() == QDialog.Accepted:
+            print("accepted")
+
+    def closeEvent(self, event):
+        QApplication.closeAllWindows()
+        event.accept()
