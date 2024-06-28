@@ -28,3 +28,25 @@ for row in ws.iter_rows(max_col=ws.max_column):
         row[6].value = quantities[ref]
 
 wb.save("./essai.xlsx")
+
+smtp_server = 'smtp.gmail.com'
+smtp_port = 587
+smtp_user = 'gaelle.rem@gmail.com'
+smtp_password = 'mdp'
+
+msg = MIMEMultipart()
+msg['From'] = smtp_user
+msg['To'] = 'coryismyangel@gmail.com'
+msg['Subject'] = 'essai'
+
+body = 'Ceci est le corps de l\'email'
+msg.attach(MIMEText(body, 'plain'))
+
+try:
+    with smtplib.SMTP(smtp_server, smtp_port) as server:
+        server.starttls()
+        server.login(smtp_user, smtp_password)
+        server.send_message(msg)
+        print("email envoyé avec succès")
+except Exception as e:
+    print(f'erreur lors de l\'envoi de l\'email : {e}')
