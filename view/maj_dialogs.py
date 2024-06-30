@@ -1,6 +1,6 @@
-from PySide6.QtWidgets import QDialog, QLineEdit, QRadioButton, QWidget, QVBoxLayout, QMessageBox, QPushButton
+from PySide6.QtWidgets import QDialog, QLineEdit, QWidget, QVBoxLayout, QMessageBox, QHBoxLayout, QLabel, QRadioButton, QSizePolicy
 from PySide6.QtCore import Qt
-from view.utilitaires import load_ui, show_alert
+from view.utilitaires import load_ui
 
 
 class GetColumns(QDialog):
@@ -28,12 +28,14 @@ class GetColumns(QDialog):
         for widget in self.findChildren(QLineEdit):
             text = widget.text()
             if not text and widget.objectName() != "marque":
-                show_alert("Valeur(s) manquante(s)")
+                QMessageBox.warning(None, "Erreur", "Valeur(s) manquante(s).")
                 return
             elif not text.isalpha() and widget.objectName() != "marque":
-                show_alert("Valeur(s) incorrecte(s),\nassurez-vous que les valeurs soient une lettre.")
+                QMessageBox.warning(None, "Erreur", "Valeur(s) incorrecte(s),\nassurez-vous que les valeurs soient une lettre.")
                 return
-            self.columns[widget.objectName()] = ord(text.upper())-65
+            value = ord(text.upper())-65
+            if value >= 0 :
+                self.columns[widget.objectName()] = value
         self.confiance = self.ui.confiance_oui.isChecked()
         self.accept()
 
@@ -46,3 +48,4 @@ class ViewData(QWidget):
         self.layout().addWidget(self.ui)
         self.setWindowTitle("Données du fichier")
         self.ui.tableView.setModel(data)
+

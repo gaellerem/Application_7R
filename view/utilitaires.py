@@ -11,13 +11,6 @@ def load_ui(ui_file_name, parent=None):
     ui_file.close()
     return widget
 
-def show_alert(message):
-    msg = QMessageBox()
-    msg.setIcon(QMessageBox.Warning)
-    msg.setText(message)
-    msg.setWindowTitle("Alerte")
-    msg.exec()
-
 def group_buttons(btnGroup:QButtonGroup, btns: list[QPushButton]):
     for btn in btns:
         btnGroup.addButton(btn)

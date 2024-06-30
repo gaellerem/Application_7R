@@ -1,19 +1,18 @@
+import os
 from dateutil import parser
-from PySide6.QtWidgets import QPushButton, QMainWindow,QDialog
+from PySide6.QtWidgets import QPushButton,QDialog
 import pandas as pd
-from models.manipulate_files import get_xls, file_present
 from models.dfModel import DataFrameModel
-from view.get_columns import GetColumns, ViewData
+from view.maj_dialogs import GetColumns, ViewData, GetDispo
 
 
-TYPES_COLUMNS = {"reference_fournisseur" : str,
-                 "code_barre" : str,
+TYPES_COLUMNS = {"reference fournisseur" : str,
+                 "code barre" : str,
                  "disponibilite" : str,
-                 "retour_en_stock" : str,
-                 "marque" : str}
+                 "retour en stock" : str}
 
 
-def get_maj(btn:QPushButton, mainWindow:QMainWindow, settings: dict):
+def get_maj(btn:QPushButton, controller, settings: dict):
     def check_fournisseur(row):
         match fournisseur:
             case "tribuo":
@@ -61,24 +60,37 @@ def get_maj(btn:QPushButton, mainWindow:QMainWindow, settings: dict):
     filename = settings.get(f"filename_{fournisseur}")
     columns, confiance = valeurs_fournisseurs(fournisseur)
 
-    file_path = file_present(pathDesktop, filename)
-    data, file_path = get_xls(file_path=file_path, header=None, skiprows=1)
+    filePath = file_present(pathDesktop, filename)
+    data, filePath = controller.load_xls(filePath=filePath, header=None, skiprows=1)
     if data.empty : return
 
-    #ouvrir popup pour les colonnes
-    columns, confiance = get_columns(mainWindow, data, columns, confiance)
-
-    print(columns, confiance)
-
-def get_columns(mainWindow, data, columns, confiance):
-    dialog = GetColumns(mainWindow, columns, confiance)
+    #ouvrir dialog pour les colonnes
+    dialog = GetColumns(controller.mainWindow, columns, confiance)
     dialog.show()
-    viewData = ViewData(mainWindow, DataFrameModel(data.head(15)))
+    viewData = ViewData(controller.mainWindow, DataFrameModel(data.head(15)))
     viewData.show()
     if dialog.exec() != QDialog.Accepted : return
     viewData.close()
     columns, confiance = dialog.get_data()
-    return columns, confiance
+
+    #récupérer uniquement les colonnes selectionnées
+    data:pd.DataFrame = data[list(columns.values())]
+    data.columns= list(value.replace("_", " ") for value in columns.keys())
+
+    #retirer les lignes où il n'y a pas de ref fournisseur
+    data.dropna(subset=["reference fournisseur"], inplace=True)
+
+    #retirer tout #NA problématique
+    data["disponibilite"] = data["disponibilite"].fillna("Rupture")
+
+    #changer le type des colonnes en str
+    data = data.astype(TYPES_COLUMNS)
+    data.fillna("", inplace=True)
+
+    #effectuer des changements en fonction du fournisseur
+    data = data.apply(check_fournisseur, axis=1)
+
+    print(data)
 
 def valeurs_fournisseurs(fournisseur):
     columns = {}
@@ -175,3 +187,15 @@ def is_date(value):
         return True
     except ValueError:
         return False
+
+def file_present(path, filename):
+    # Liste tous les fichiers dans le chemin spécifié
+    files = os.listdir(path)
+
+    # Vérifie si le nom du fichier partiel correspond à un fichier dans le chemin donné
+    for file in files:
+        if filename in file:
+            return os.path.join(path, file)
+    
+    # Si aucun fichier correspondant n'est trouvé
+    return ""
