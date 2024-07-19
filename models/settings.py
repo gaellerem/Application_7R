@@ -1,14 +1,10 @@
 import json, os
-from config import APP_PATH
 
-APP_DATA = os.path.join(os.getenv('APPDATA'), 'App_7R')
-if not os.path.exists(APP_DATA):
-    os.makedirs(APP_DATA)
 
 class Settings(dict):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, path, *args, **kwargs):
         super(Settings, self).__init__(*args, **kwargs)
-        self.filename = os.path.join(APP_DATA, 'settings.json')
+        self.filename = os.path.join(path, 'settings.json')
         self.load()
 
     def load(self):

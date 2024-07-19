@@ -173,8 +173,6 @@ QPushButton{
               <font>
                <family>Arial</family>
                <pointsize>-1</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
               </font>
              </property>
              <property name="layoutDirection">
@@ -326,8 +324,6 @@ QPushButton{
               <font>
                <family>Arial</family>
                <pointsize>-1</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
               </font>
              </property>
              <property name="layoutDirection">
@@ -440,8 +436,6 @@ QPushButton{
               <font>
                <family>Arial</family>
                <pointsize>-1</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
               </font>
              </property>
              <property name="layoutDirection">
@@ -569,8 +563,6 @@ QPushButton{
               <font>
                <family>Arial</family>
                <pointsize>-1</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
               </font>
              </property>
              <property name="layoutDirection">
@@ -706,8 +698,6 @@ QPushButton{
               <font>
                <family>Arial</family>
                <pointsize>-1</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
               </font>
              </property>
              <property name="layoutDirection">
@@ -814,8 +804,6 @@ QPushButton{
               <font>
                <family>Arial</family>
                <pointsize>-1</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
               </font>
              </property>
              <property name="layoutDirection">
@@ -889,8 +877,6 @@ QPushButton{
               <font>
                <family>Arial</family>
                <pointsize>-1</pointsize>
-               <weight>50</weight>
-               <bold>false</bold>
               </font>
              </property>
              <property name="layoutDirection">
@@ -1208,7 +1194,7 @@ p, li { white-space: pre-wrap; }
                </item>
               </layout>
              </widget>
-             <widget class="QWidget" name="paths">
+             <widget class="QWidget" name="others">
               <attribute name="title">
                <string>Autres</string>
               </attribute>
@@ -1217,7 +1203,7 @@ p, li { white-space: pre-wrap; }
                 <number>10</number>
                </property>
                <property name="verticalSpacing">
-                <number>5</number>
+                <number>10</number>
                </property>
                <item row="0" column="0">
                 <widget class="QLabel" name="label_29">
@@ -1229,35 +1215,57 @@ p, li { white-space: pre-wrap; }
                <item row="0" column="1">
                 <widget class="QLineEdit" name="path_desktop"/>
                </item>
-               <item row="1" column="0">
+               <item row="2" column="0">
                 <widget class="QLabel" name="label_32">
                  <property name="text">
                   <string>Mail compta</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
+               <item row="2" column="1">
                 <widget class="QLineEdit" name="mail_compta"/>
                </item>
                <item row="3" column="0">
-                <widget class="QLabel" name="label_33">
-                 <property name="text">
-                  <string>Mail GW</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QLineEdit" name="mail_gw"/>
-               </item>
-               <item row="2" column="0">
                 <widget class="QLabel" name="label_34">
                  <property name="text">
                   <string>Mail WPN</string>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1">
+               <item row="3" column="1">
                 <widget class="QLineEdit" name="mail_wpn"/>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_33">
+                 <property name="text">
+                  <string>Mail GW</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="mail_gw"/>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_35">
+                 <property name="text">
+                  <string>Mail erreur GW</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLineEdit" name="mail_error_gw"/>
+               </item>
+               <item row="1" column="0" colspan="2">
+                <widget class="Line" name="line">
+                 <property name="styleSheet">
+                  <string notr="true">Line {
+	padding : 4em;
+}</string>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>

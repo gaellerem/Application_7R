@@ -5,39 +5,49 @@ from PySide6.QtWidgets import QWidget, QPushButton, QLineEdit, QTextEdit, QFileD
 from models.maj import get_maj
 from models.settings import Settings
 from view.mainView import MainWindow
+from config import APP_PATH, APP_DATA
+
 
 class Controller(QObject):
     def __init__(self, mainWindow):
         super().__init__()
-        self.settings = Settings()
+        self.localSettinsgWidgets = ["path_desktop"]
+        self.localSettings = Settings(APP_DATA)
+        self.globalSettings = Settings(APP_PATH)
         self.mainWindow: MainWindow = mainWindow
         self.setup_ui()
         self.load_settings()
 
-        list(ast.literal_eval(self.settings.get("dispo_dispo")))
+        # list(ast.literal_eval(self.globalSettings.get("dispo_dispo")))
 
     def setup_ui(self):
         self.mainWindow.findChild(QPushButton, 'save_settings').clicked.connect(lambda :self.save_settings())
 
-        self.mainWindow.maj_btns.buttonClicked.connect(lambda btn: get_maj(btn, self, self.settings))
+        self.mainWindow.maj_btns.buttonClicked.connect(lambda btn: get_maj(btn, self, self.globalSettings))
+
+        self.settings_widget = self.mainWindow.findChild(QWidget, 'settings')
 
     def load_settings(self):
-        settings_widget : QWidget = self.mainWindow.findChild(QWidget, 'settings')
-        for parameter in settings_widget.findChildren(QLineEdit):
-            parameter.setText(self.settings.get(parameter.objectName(), ''))
-        for parameter in settings_widget.findChildren(QTextEdit):
-            parameter.setPlainText(self.settings.get(parameter.objectName(), ''))
+        for parameter in self.settings_widget.findChildren(QLineEdit):
+            if parameter.objectName() in self.localSettinsgWidgets :
+                parameter.setText(self.localSettings.get(parameter.objectName(), ''))
+            else :
+                parameter.setText(self.globalSettings.get(parameter.objectName(), ''))
+        for parameter in self.settings_widget.findChildren(QTextEdit):
+            parameter.setPlainText(self.globalSettings.get(parameter.objectName(), ''))
 
     def save_settings(self):
-        settings_widget : QWidget = self.mainWindow.findChild(QWidget, 'settings')
-        for parameter in settings_widget.findChildren(QLineEdit):
-            self.settings[parameter.objectName()] = parameter.text()
-        for parameter in settings_widget.findChildren(QTextEdit):
-            self.settings[parameter.objectName()] = parameter.toPlainText()
+        for parameter in self.settings_widget.findChildren(QLineEdit):
+            if parameter.objectName() in self.localSettinsgWidgets :
+                self.localSettings[parameter.objectName()] = parameter.text()
+            else :
+                self.globalSettings[parameter.objectName()] = parameter.text()
+        for parameter in self.settings_widget.findChildren(QTextEdit):
+            self.globalSettings[parameter.objectName()] = parameter.toPlainText()
 
     def load_xls(self, filePath, **kwargs):
         if not filePath:
-            path = self.settings.get("path_desktop")
+            path = self.localSettings.get("path_desktop")
             filePath, _ = QFileDialog.getOpenFileName(dir=path,
                 filter=("fichiers Excel (*.xlsx;*.xls;*.xlsm;*.xlsb;*.odf;*.ods;*.odt)")
             )

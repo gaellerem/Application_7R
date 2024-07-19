@@ -1,6 +1,3 @@
-import sys
-import pandas as pd
-from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QTableView, QWidget
 from PySide6.QtCore import QAbstractTableModel, Qt
 
 class DataFrameModel(QAbstractTableModel):
@@ -8,10 +5,10 @@ class DataFrameModel(QAbstractTableModel):
         super().__init__()
         self._data = data
 
-    def rowCount(self, parent=None):
+    def rowCount(self):
         return len(self._data)
 
-    def columnCount(self, parent=None):
+    def columnCount(self):
         return self._data.shape[1]
 
     def data(self, index, role=Qt.DisplayRole):

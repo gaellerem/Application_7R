@@ -1,0 +1,22 @@
+{
+    "filename_asmodee": "Matrice Asmodee",
+    "filename_atalia": "",
+    "filename_blackrock": "matrice Blackrock",
+    "filename_gigamic": "MATRICE GIGAMIC",
+    "filename_heo": "view-source",
+    "filename_iello": "IELLO - Catalogue",
+    "filename_mad": "MAD - Bon de commande",
+    "filename_neoludis": "Matrice de r\u00e9f\u00e9rencement N\u00e9oludis",
+    "filename_pixie": "bdc-pixie",
+    "filename_tribuo": "_Tribuo_",
+    "path_desktop": "C:\\Users\\gaell\\OneDrive\\Bureau",
+    "mail_compta": "cgex@dessavoie.cerfrance.fr",
+    "mail_gw": "",
+    "mail_wpn": "wpnprocessing@ardem.com",
+    "filtre_avoir": "",
+    "filtre_autres": "",
+    "dispo_dispo": "[\"Disponible\", \"DISPONIBLE\", \"6DISPO\", \"Nouveaut\u00e9\", \"Fin de Stock\", \"Offre\", \"Nouveaut\u00e9 \", \"Disponible \", \"0\", \"Retour en Stock\", \"Dispo\", \"Diponible\"]",
+    "dispo_rupture": "(\"Rupture\", \"RUPTURE\", \"En r\u00e9appro.\", \"4RUPTURE\", \"3REASSORT\", \"1\", \"4\", \"3\", \"Rupture \", \"Rupture de stock\", \"Indisponible\",\"janvier\", \"fevrier\", \"f\u00e9vrier\", \"mars\", \"avril\", \"mai\", \"juin\", \"juillet\", \"aout\", \"ao\u00fbt\", \"septembre\", \"octobre\", \"novembre\", \"decembre\", \"d\u00e9cembre\")",
+    "dispo_epuise": "(\"Epuis\u00e9\", \"2EPUISE\", \"Out\", \"2\", \"Epuis\u00e9\", \"Sortie catalogue\", \"Rupture d\u00e9finitive\", \"Fin de S\u00e9rie\")",
+    "dispo_preco": "(\"Pr\u00e9commande\", \"\u00c0 para\u00eetre\", \"A venir\", \"1APARAITR\", \"7PRECOM\", \"Pr\u00e9co\", \"New\")"
+}
