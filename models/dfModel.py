@@ -5,10 +5,10 @@ class DataFrameModel(QAbstractTableModel):
         super().__init__()
         self._data = data
 
-    def rowCount(self):
+    def rowCount(self, parent=None):
         return len(self._data)
 
-    def columnCount(self):
+    def columnCount(self, parent=None):
         return self._data.shape[1]
 
     def data(self, index, role=Qt.DisplayRole):

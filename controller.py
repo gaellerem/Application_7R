@@ -4,7 +4,7 @@ from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QWidget, QPushButton, QLineEdit, QTextEdit, QFileDialog, QInputDialog, QMessageBox
 from models.maj import get_maj
 from models.settings import Settings
-from view.mainView import MainWindow
+from view.main_window import MainWindow
 from config import APP_PATH, APP_DATA
 
 

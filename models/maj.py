@@ -37,22 +37,24 @@ def get_maj(btn:QPushButton, controller, settings: dict):
             case "pixie":
                 row["reference_fournisseur"] = row["reference_fournisseur"].replace("ex ", "")
         return row
-    def update_row(row):
-        # row["disponibilite"] = radios[row["disponibilite"]].get()
+    def update_row(row, selected_values):
+        if row["disponibilite"] in selected_values:
+            row["disponibilite"] = selected_values[row["disponibilite"]]
+
         if row["disponibilite"] == "Disponible":
-            row["retour_en_stock"] = ""
+            row["retour en stock"] = ""
 
         if not confiance or (row["marque"] == "POKEMON" and fournisseur=="Asmodee") or row["disponibilite"] != "Disponible":
             row["Autoriser la vente si Hors Stock (site Web)"] = "Non"
         else:
             row["Autoriser la vente si Hors Stock (site Web)"] = "Oui"
 
-        row["retour_en_stock"] = row["retour_en_stock"].replace(" 00:00:00", "")
-        if row["retour_en_stock"] != "":
-            if is_date(row["retour_en_stock"]) and pd.to_datetime(row["retour_en_stock"]) - pd.DateOffset(days=4) <= pd.to_datetime("now") and row["disponibilite"] == "Article en précommande":
+        row["retour en stock"] = row["retour en stock"].replace(" 00:00:00", "")
+        if row["retour en stock"] != "":
+            if is_date(row["retour en stock"]) and pd.to_datetime(row["retour en stock"]) - pd.DateOffset(days=4) <= pd.to_datetime("now") and row["disponibilite"] == "Article en précommande":
                 row["disponibilite"] = "Incertain"
-            elif not is_date(row["retour_en_stock"]) : 
-                row["retour_en_stock"] = ""
+            elif not is_date(row["retour en stock"]) : 
+                row["retour en stock"] = ""
         return row
 
     fournisseur = btn.objectName()
@@ -90,6 +92,13 @@ def get_maj(btn:QPushButton, controller, settings: dict):
     #effectuer des changements en fonction du fournisseur
     data = data.apply(check_fournisseur, axis=1)
 
+    #associer les disponibilités aux bonnes valeurs
+    dialog = GetDispo(controller, data["disponibilite"].unique())
+    dialog.show()
+    if dialog.exec() != QDialog.Accepted : return
+
+    selected_values = dialog.get_selected_values()
+    data = data.apply(lambda row: update_row(row, selected_values), axis=1)
     print(data)
 
 def valeurs_fournisseurs(fournisseur):
