@@ -1,6 +1,6 @@
 import os
 from dateutil import parser
-from PySide6.QtWidgets import QPushButton,QDialog
+from PySide6.QtWidgets import QPushButton,QDialog, QMessageBox
 import pandas as pd
 from models.dfModel import DataFrameModel
 from view.maj_dialogs import GetColumns, ViewData, GetDispo
@@ -16,13 +16,13 @@ def get_maj(btn:QPushButton, controller, settings: dict):
     def check_fournisseur(row):
         match fournisseur:
             case "tribuo":
-                if "Rupture" in row["retour_en_stock"]:
+                if "Rupture" in row["retour en stock"]:
                     row["disponibilite"] = "Rupture" 
-                    row["retour_en_stock"] = row["retour_en_stock"].split(" - ")[-1]
+                    row["retour en stock"] = row["retour en stock"].split(" - ")[-1]
                 else:
                     row["disponibilite"] = "Disponible"
             case "gigamic":
-                if pd.to_datetime(row["retour_en_stock"]) - pd.DateOffset(days=1) <= pd.to_datetime("now"):
+                if pd.to_datetime(row["retour en stock"]) - pd.DateOffset(days=1) <= pd.to_datetime("now"):
                     row["disponibilite"] = "Disponible"
                 else :
                     row["disponibilite"] = "Préco"
@@ -35,7 +35,7 @@ def get_maj(btn:QPushButton, controller, settings: dict):
                 if row["disponibilite"] == "":
                     row["disponibilite"] = "Incertain"
             case "pixie":
-                row["reference_fournisseur"] = row["reference_fournisseur"].replace("ex ", "")
+                row["reference fournisseur"] = row["reference fournisseur"].replace("ex ", "")
         return row
     def update_row(row, selected_values):
         if row["disponibilite"] in selected_values:
@@ -50,10 +50,13 @@ def get_maj(btn:QPushButton, controller, settings: dict):
             row["Autoriser la vente si Hors Stock (site Web)"] = "Oui"
 
         row["retour en stock"] = row["retour en stock"].replace(" 00:00:00", "")
+
         if row["retour en stock"] != "":
-            if is_date(row["retour en stock"]) and pd.to_datetime(row["retour en stock"]) - pd.DateOffset(days=4) <= pd.to_datetime("now") and row["disponibilite"] == "Article en précommande":
-                row["disponibilite"] = "Incertain"
-            elif not is_date(row["retour en stock"]) : 
+            returnDate = parse_date(row["retour en stock"])
+            if returnDate:
+                if returnDate - pd.DateOffset(days=4) <= pd.to_datetime("now") and row["disponibilite"] == "Article en précommande":
+                    row["disponibilite"] = "Incertain"
+            else:
                 row["retour en stock"] = ""
         return row
 
@@ -74,6 +77,8 @@ def get_maj(btn:QPushButton, controller, settings: dict):
     if dialog.exec() != QDialog.Accepted : return
     viewData.close()
     columns, confiance = dialog.get_data()
+    if fournisseur == "iello":
+        columns["Nouveautes"]= 4
 
     #récupérer uniquement les colonnes selectionnées
     data:pd.DataFrame = data[list(columns.values())]
@@ -97,9 +102,24 @@ def get_maj(btn:QPushButton, controller, settings: dict):
     dialog.show()
     if dialog.exec() != QDialog.Accepted : return
 
+    data["Fournisseur"] = fournisseur.title()
+
     selected_values = dialog.get_selected_values()
     data = data.apply(lambda row: update_row(row, selected_values), axis=1)
-    print(data)
+
+    if fournisseur == "iello":
+        del data["Nouveautes"]
+        del columns["Nouveautes"]
+
+    name = f"MAJ_{fournisseur.title()}.csv"
+    data.to_csv(
+        os.path.join(pathDesktop, name), 
+        index=False, 
+        header=list(columns.keys())+["Fournisseur", "Autoriser la vente si Hors Stock (site Web)"], 
+        sep=";", 
+        encoding="ISO-8859-1"
+    )
+    QMessageBox.information(controller.mainWindow, "Succès", f"Le fichier {name} a été créé avec succès")
 
 def valeurs_fournisseurs(fournisseur):
     columns = {}
@@ -151,7 +171,6 @@ def valeurs_fournisseurs(fournisseur):
             columns["disponibilite"] = "I"
             columns["retour_en_stock"] = "J"
             columns["marque"] = "D"
-            columns["Nouveautes"]=4
             confiance = True
         case "mad":
             columns["code_barre"] = "F"
@@ -190,12 +209,22 @@ def valeurs_fournisseurs(fournisseur):
             confiance = False
     return columns, confiance
 
-def is_date(value):
+def parse_date(date_str):
     try:
-        parser.parse(value)
-        return True
+        # Vérifiez si la date est dans un format ISO (%Y-%m-%d) ou proche
+        if len(date_str) == 10 and date_str[4] == '-' and date_str[7] == '-':
+            date = pd.to_datetime(date_str, format='%Y-%m-%d')
+        else:
+            # Sinon, essayez de parser la date comme une date française (jour/mois/année)
+            date = pd.to_datetime(date_str, dayfirst=True)
     except ValueError:
-        return False
+        try:
+            # Si cela échoue, tentez de parser comme une date américaine (mois/jour/année)
+            date = pd.to_datetime(date_str, dayfirst=False)
+        except ValueError:
+            # Si cela échoue aussi, retournez None
+            date = None
+    return date
 
 def file_present(path, filename):
     # Liste tous les fichiers dans le chemin spécifié
@@ -205,6 +234,6 @@ def file_present(path, filename):
     for file in files:
         if filename in file:
             return os.path.join(path, file)
-    
+
     # Si aucun fichier correspondant n'est trouvé
     return ""

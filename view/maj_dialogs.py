@@ -51,7 +51,7 @@ class ViewData(QWidget):
 
 
 class GetDispo(QDialog):
-    def __init__(self, controller, values):
+    def __init__(self, controller, values: list[str]):
         super().__init__()
         self.settings = controller.globalSettings
         self.ui = load_ui("get_dispo", controller.mainWindow)
@@ -72,6 +72,7 @@ class GetDispo(QDialog):
             "Incertain" : []
         }
         for value in self.values:
+            value = value.strip()
             layout = QHBoxLayout()
             label = QLabel()
             label.setMinimumWidth(175)

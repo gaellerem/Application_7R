@@ -21,7 +21,16 @@ class DataFrameModel(QAbstractTableModel):
     def headerData(self, section, orientation, role=Qt.DisplayRole):
         if role == Qt.DisplayRole:
             if orientation == Qt.Horizontal:
-                return str(self._data.columns[section])
+                return self.column_number_to_letter(section)
             elif orientation == Qt.Vertical:
                 return str(self._data.index[section])
         return None
+
+    @staticmethod
+    def column_number_to_letter(n):
+        """Convert column number to Excel-style letters."""
+        result = ''
+        while n >= 0:
+            result = chr(n % 26 + ord('A')) + result
+            n = n // 26 - 1
+        return result
