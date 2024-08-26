@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QDialog, QLineEdit, QWidget, QVBoxLayout, QMessageBox, QHBoxLayout, QLabel, QRadioButton, QButtonGroup
-from view.utilitaires import load_ui
+from utilitaires.ui import load_ui
 
 
 class GetColumns(QDialog):
@@ -15,7 +15,8 @@ class GetColumns(QDialog):
     def load_data(self, columns, confiance):
         for key, value in columns.items():
             widget = self.findChild(QLineEdit, key)
-            if widget : widget.setText(value)
+            if widget:
+                widget.setText(value)
         self.ui.confiance_oui.setChecked(confiance)
         self.ui.confiance_non.setChecked(not confiance)
 
@@ -30,10 +31,11 @@ class GetColumns(QDialog):
                 QMessageBox.warning(None, "Erreur", "Valeur(s) manquante(s).")
                 return
             elif not text.isalpha() and widget.objectName() != "marque":
-                QMessageBox.warning(None, "Erreur", "Valeur(s) incorrecte(s),\nassurez-vous que les valeurs soient une lettre.")
+                QMessageBox.warning(
+                    None, "Erreur", "Valeur(s) incorrecte(s),\nassurez-vous que les valeurs soient une lettre.")
                 return
             value = ord(text.upper())-65
-            if value >= 0 :
+            if value >= 0:
                 self.columns[widget.objectName()] = value
         self.confiance = self.ui.confiance_oui.isChecked()
         self.accept()
@@ -69,7 +71,7 @@ class GetDispo(QDialog):
             "Rupture temporaire": self.settings.get("dispo_rupture", []),
             "Définitivement Epuisé": self.settings.get("dispo_epuise", []),
             "Article en précommande": self.settings.get("dispo_preco", []),
-            "Incertain" : []
+            "Incertain": []
         }
         for value in self.values:
             value = value.strip()
@@ -103,7 +105,8 @@ class GetDispo(QDialog):
         for value, buttonGroup in self.buttonGroups.items():
             selected_button = buttonGroup.checkedButton()
             if selected_button:
-                selected_values[value] = selected_button.objectName().split('_')[-1]
+                selected_values[value] = selected_button.objectName().split(
+                    '_')[-1]
             else:
                 selected_values[value] = ""
         return selected_values

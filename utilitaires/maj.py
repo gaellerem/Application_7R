@@ -1,5 +1,4 @@
 import os
-from dateutil import parser
 from PySide6.QtWidgets import QPushButton,QDialog, QMessageBox
 import pandas as pd
 from models.dfModel import DataFrameModel

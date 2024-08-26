@@ -1,7 +1,6 @@
-import sys
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QButtonGroup, QPushButton, QMessageBox
-from PySide6.QtCore import QFile, QIODevice, Qt
+from PySide6.QtWidgets import QButtonGroup, QPushButton
+from PySide6.QtCore import QFile, QIODevice
 
 def load_ui(ui_file_name, parent=None):
     ui_file = QFile(f"view/UI/{ui_file_name}.ui")
