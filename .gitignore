@@ -3,3 +3,4 @@ __pycache__/
 credentials.json
 settings.json
 essai.py
+mailconfig.json
