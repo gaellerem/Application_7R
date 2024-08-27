@@ -46,10 +46,10 @@ class EXP():
                 )
             except PermissionError:
                 QMessageBox.critical(
-                    None, "Erreur", "Permission refusée. Le fichier est actuellement ouvert.")
+                    self.controller.mainWindow, "Erreur", "Permission refusée. Le fichier est actuellement ouvert.")
             except Exception as e:
                 QMessageBox.critical(
-                    None, "Erreur", f"Une erreur s'est produite : {e}")
+                    self.controller.mainWindow, "Erreur", f"Une erreur s'est produite : {e}")
         match name:
             case "ImportAsmodeeGroup":
                 webbrowser.open("https://shop.novalisgames.com/import")
@@ -72,10 +72,10 @@ class EXP():
                 )
             except PermissionError:
                 QMessageBox.critical(
-                    None, "Erreur", "Permission refusée. Le fichier est actuellement ouvert.")
+                    self.controller.mainWindow, "Erreur", "Permission refusée. Le fichier est actuellement ouvert.")
             except Exception as e:
                 QMessageBox.critical(
-                    None, "Erreur", f"Une erreur s'est produite : {e}")
+                    self.controller.mainWindow, "Erreur", f"Une erreur s'est produite : {e}")
 
     def copy_to_paperclip(self, name):
         """

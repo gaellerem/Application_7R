@@ -1,8 +1,9 @@
-import ast
+import os
 import pandas as pd
 from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QWidget, QPushButton, QLineEdit, QTextEdit, QFileDialog, QInputDialog, QMessageBox
 from models.mailManager import MailManager
+from models.compta import Compta
 from models.exports import EXP
 from models.settings import Settings
 from view.main_window import MainWindow
@@ -20,6 +21,7 @@ class Controller(QObject):
         self.globalSettings = Settings(APP_PATH)
         self.mainWindow: MainWindow = mainWindow
         self.export = EXP(self)
+        self.compta = Compta(self)
         self.mail = MailManager(APP_PATH)
         self.setup_ui()
         self.load_settings()
@@ -32,6 +34,8 @@ class Controller(QObject):
 
         self.mainWindow.maj_btns.buttonClicked.connect(
             lambda btn: get_maj(btn, self, self.globalSettings))
+
+        self.mainWindow.findChild(QPushButton, 'compta_start').clicked.connect(lambda: self.compta.traitement())
 
         self.mainWindow.findChild(
             QPushButton, 'chessex').clicked.connect(lambda: chessex(self))
@@ -132,7 +136,7 @@ class Controller(QObject):
                     return xlsFile.parse(sheetName, **kwargs).dropna(axis=0, how="all").dropna(axis=1, how="all"), filePath
             except Exception as e:
                 QMessageBox.critical(
-                    None, "Erreur", f"Une erreur s'est produite : {e}")
+                    self.mainWindow, "Erreur", f"Une erreur s'est produite : {e}")
         return pd.DataFrame(), filePath
 
     def load_csv(self, **kwargs):
@@ -144,5 +148,17 @@ class Controller(QObject):
                 return data
             except Exception as e:
                 QMessageBox.critical(
-                    None, "Erreur", f"Une erreur s'est produite : {e}")
+                    self.mainWindow, "Erreur", f"Une erreur s'est produite : {e}")
         return None
+
+    def file_present(self, path, filename):
+        # Liste tous les fichiers dans le chemin spécifié
+        files = os.listdir(path)
+
+        # Vérifie si le nom du fichier partiel correspond à un fichier dans le chemin donné
+        for file in files:
+            if filename in file:
+                return os.path.join(path, file)
+
+        # Si aucun fichier correspondant n'est trouvé
+        return ""
