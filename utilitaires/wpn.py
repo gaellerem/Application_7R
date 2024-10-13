@@ -46,8 +46,8 @@ def exp_wpn(controller):
         body = "Bonjour,\nVoici le fichier demandé.\nBonne réception,\nHugo."
         attachments = [os.path.join(pathDesktop, file_name)]
         controller.mail.send_email(
-            fromAddress="wpn.processing@les7royaumes.com",
-            toAddress="gaelle.rem@gmail.com",
+            fromAddress=controller.globalSettings.get("wpn_from"),
+            toAddress=controller.globalSettings.get("wpn_to"),
             subject="WPN POS DATA 5783",
             body=body,
             attachments=attachments

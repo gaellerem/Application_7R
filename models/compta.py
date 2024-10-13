@@ -1,9 +1,9 @@
 import ast
 import calendar
 import locale
+import numpy as np
 import os
 from PySide6.QtWidgets import QMessageBox, QFileDialog
-import numpy as np
 from pandas import DataFrame
 import pandas as pd
 
@@ -12,8 +12,8 @@ class Compta():
     def __init__(self, controller):
         self.controller = controller
         self.pathDesktop = controller.localSettings.get("path_desktop")
-        self.avoirFilter = list(ast.literal_eval(controller.globalSettings.get("filtre_avoir", [])))
-        self.autresFilter = list(ast.literal_eval(controller.globalSettings.get("filtre_autres", [])))
+        self.FILTRE_AVOIR = list(ast.literal_eval(controller.globalSettings.get("filtre_avoir", [])))
+        self.FILTRE_AUTRES = list(ast.literal_eval(controller.globalSettings.get("filtre_autres", [])))
 
         self.attachments = ["VENTES", "OD", "BANQUES", "CAISSES"]
 
@@ -34,22 +34,15 @@ class Compta():
                 locale.setlocale(locale.LC_ALL, 'fr_FR')
                 nom_mois = calendar.month_name[self.month]
                 body = get_mail(self.rgm_multiple, nom_mois)
-                print(body)
+                attachments = [f"{self.directory}/{file}.csv" for file in self.attachments]
 
-                # outlook = win32.Dispatch("outlook.application")
-                # mail = outlook.CreateItem(0)
-                # compte_trouve=None
-                # for compte in outlook.Session.Accounts:
-                #     if compte.SmtpAddress == "service.compta@les7royaumes.com":
-                #         compte_trouve = compte
-                #         break
-                # if compte_trouve : mail.SendUsingAccount = compte_trouve
-                # mail.To = "cgex@dessavoie.cerfrance.fr"
-                # mail.Subject = f"Fichiers {nom_mois}"
-                # mail.Body = get_mail(self.rgm_multiple, nom_mois)
-                # for file in self.pieces_jointes:
-                #     mail.Attachments.Add(f"{self.directory}/{file}.csv")
-                # mail.Display()
+                self.controller.mail.send_email(
+                    fromAddress=self.controller.globalSettings.get("compta_from"),
+                    toAddress=self.controller.globalSettings.get("compta_to"),
+                    subject=f"Fichiers {nom_mois}",
+                    body=body,
+                    attachments=attachments
+                )
 
         except Exception as e:
             QMessageBox.critical(
@@ -63,10 +56,8 @@ class Compta():
         if not self.file_path:
             self.file_path, _ = QFileDialog.getOpenFileName(filter=("CSV (*.csv)"))
         if self.file_path:
-            print(self.file_path)
             self.lettrage = pd.read_csv(
                 self.file_path, encoding="ISO-8859-1", sep=";", dtype={"Document": str}).dropna(how="all")
-            print(self.lettrage)
             self.lettrage["Date"] = pd.to_datetime(
                 self.lettrage["Date"], format="%d/%m/%Y %H:%M:%S")
             self.lettrage = self.lettrage.sort_values(
@@ -219,7 +210,7 @@ class Compta():
         if self.acompte:
             odacompte: DataFrame = self.lettrage[self.lettrage['Référence'].isin(
                 self.acompte)]
-            odacompte['Date'] = odacompte['Date'].dt.strftime('%d/%m/%Y')
+            odacompte.loc[:, 'Date'] = odacompte['Date'].dt.strftime('%d/%m/%Y')
             self.ods["ACOMPTES"] = odacompte
 
         categories = ["AVOIR", "AUTRES"]
@@ -253,7 +244,7 @@ class Compta():
         for name, df in self.ods.items():
             df.to_csv(f'{self.directory}/OD{name}.csv', header=False,
                       index=False, sep=";", encoding='ISO-8859-1')
-            self.pieces_jointes.append(f'OD{name}')
+            self.attachments.append(f'OD{name}')
 
 
 def dictOD(row, compte, debit, credit, document):

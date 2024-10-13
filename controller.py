@@ -22,33 +22,32 @@ class Controller(QObject):
         self.mainWindow: MainWindow = mainWindow
         self.export = EXP(self)
         self.compta = Compta(self)
-        self.mail = MailManager(APP_PATH)
+        self.mail = MailManager(APP_PATH, self)
         self.setup_ui()
         self.load_settings()
 
         # list(ast.literal_eval(self.globalSettings.get("dispo_dispo")))
 
     def setup_ui(self):
-        self.mainWindow.findChild(QPushButton, 'save_settings').clicked.connect(
+        self.mainWindow.ui.save_settings.clicked.connect(
             lambda: self.save_settings())
 
         self.mainWindow.maj_btns.buttonClicked.connect(
             lambda btn: get_maj(btn, self, self.globalSettings))
 
-        self.mainWindow.findChild(QPushButton, 'compta_start').clicked.connect(lambda: self.compta.traitement())
+        self.mainWindow.ui.compta_start.clicked.connect(lambda: self.compta.traitement())
 
-        self.mainWindow.findChild(
-            QPushButton, 'chessex').clicked.connect(lambda: chessex(self))
-        self.mainWindow.findChild(QPushButton, 'invoiceItem').clicked.connect(
-            lambda: invoice_item(self))
-        self.mainWindow.findChild(QPushButton, 'openOrders').clicked.connect(
-            lambda: open_orders(self))
+        self.mainWindow.ui.chessex.clicked.connect(lambda: chessex(self))
+        self.mainWindow.ui.invoiceItem.clicked.connect(lambda: invoice_item(self))
+        self.mainWindow.ui.openOrders.clicked.connect(lambda: open_orders(self))
 
         self.mainWindow.exp_btns.buttonClicked.connect(self.handleExport)
 
-        self.mainWindow.findChild(QPushButton, 'wpn_start').clicked.connect(lambda:exp_wpn(self))
+        self.mainWindow.ui.wpn_start.clicked.connect(lambda:exp_wpn(self))
+        
 
         self.settings_widget = self.mainWindow.findChild(QWidget, 'settings')
+        self.settings_widget = self.mainWindow.ui.settings
 
     def handleExport(self, button):
         button_name = button.objectName()
@@ -137,7 +136,7 @@ class Controller(QObject):
             except Exception as e:
                 QMessageBox.critical(
                     self.mainWindow, "Erreur", f"Une erreur s'est produite : {e}")
-        return pd.DataFrame(), filePath
+        return None, filePath
 
     def load_csv(self, **kwargs):
         filePath, _ = QFileDialog.getOpenFileName(filter=("CSV (*.csv)"))

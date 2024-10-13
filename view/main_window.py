@@ -1,5 +1,5 @@
 import view.resources_rc
-from PySide6.QtWidgets import QMainWindow, QPushButton, QButtonGroup, QWidget, QDialog, QApplication
+from PySide6.QtWidgets import QMainWindow, QPushButton, QButtonGroup, QWidget, QApplication
 from utilitaires.ui import group_buttons, load_ui
 
 

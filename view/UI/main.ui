@@ -1164,86 +1164,157 @@ p, li { white-space: pre-wrap; }
                 <number>10</number>
                </property>
                <item row="0" column="0">
+                <widget class="QLabel" name="label_39">
+                 <property name="text">
+                  <string>Serveur SMTP</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="smtpServer"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_40">
+                 <property name="text">
+                  <string>Port SMTP</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="smtpPort"/>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_41">
+                 <property name="text">
+                  <string>Mot de passe</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="password">
+                 <property name="echoMode">
+                  <enum>QLineEdit::Password</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_42">
+                 <property name="text">
+                  <string>Nom affiché</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="displayName"/>
+               </item>
+               <item row="6" column="0">
                 <widget class="QLabel" name="label_36">
                  <property name="text">
                   <string>Expediteur compta</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
+               <item row="6" column="1">
                 <widget class="QLineEdit" name="compta_from"/>
                </item>
-               <item row="1" column="0">
+               <item row="7" column="0">
                 <widget class="QLabel" name="label_32">
                  <property name="text">
                   <string>Destinataire compta</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
+               <item row="7" column="1">
                 <widget class="QLineEdit" name="compta_to"/>
                </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_34">
-                 <property name="text">
-                  <string>Expediteur WPN</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QLineEdit" name="wpn_from"/>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_33">
-                 <property name="text">
-                  <string>Destinataire WPN</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QLineEdit" name="wpn_to"/>
-               </item>
-               <item row="6" column="0">
-                <widget class="QLabel" name="label_35">
-                 <property name="text">
-                  <string>Expediteur GW</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="1">
-                <widget class="QLineEdit" name="gw_from"/>
-               </item>
-               <item row="7" column="0">
-                <widget class="QLabel" name="label_37">
-                 <property name="text">
-                  <string>Destinataire GW</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="7" column="1">
-                <widget class="QLineEdit" name="gw_to"/>
-               </item>
-               <item row="8" column="0">
-                <widget class="QLabel" name="label_38">
-                 <property name="text">
-                  <string>Dest. erreurs GW</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="8" column="1">
-                <widget class="QLineEdit" name="gw_errors_to"/>
-               </item>
-               <item row="2" column="0" colspan="2">
+               <item row="8" column="0" colspan="2">
                 <widget class="Line" name="line">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
                 </widget>
                </item>
-               <item row="5" column="0" colspan="2">
+               <item row="9" column="0">
+                <widget class="QLabel" name="label_34">
+                 <property name="text">
+                  <string>Expediteur WPN</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QLineEdit" name="wpn_from"/>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLabel" name="label_33">
+                 <property name="text">
+                  <string>Destinataire WPN</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="1">
+                <widget class="QLineEdit" name="wpn_to"/>
+               </item>
+               <item row="11" column="0" colspan="2">
                 <widget class="Line" name="line_2">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="0">
+                <widget class="QLabel" name="label_35">
+                 <property name="text">
+                  <string>Expediteur GW</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="1">
+                <widget class="QLineEdit" name="gw_from"/>
+               </item>
+               <item row="13" column="0">
+                <widget class="QLabel" name="label_37">
+                 <property name="text">
+                  <string>Destinataire GW</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="1">
+                <widget class="QLineEdit" name="gw_to"/>
+               </item>
+               <item row="14" column="0">
+                <widget class="QLabel" name="label_38">
+                 <property name="text">
+                  <string>Dest. erreurs GW</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="14" column="1">
+                <widget class="QLineEdit" name="gw_errors_to"/>
+               </item>
+               <item row="5" column="0" colspan="2">
+                <widget class="Line" name="line_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_43">
+                 <property name="font">
+                  <font>
+                   <family>Arial</family>
+                   <pointsize>-1</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>MDP compte commande</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLineEdit" name="password_frn">
+                 <property name="echoMode">
+                  <enum>QLineEdit::Password</enum>
                  </property>
                 </widget>
                </item>

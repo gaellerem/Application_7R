@@ -66,7 +66,7 @@ def get_maj(btn:QPushButton, controller, settings: dict):
 
     filePath = file_present(pathDesktop, filename)
     data, filePath = controller.load_xls(filePath=filePath, header=None, skiprows=1)
-    if data.empty : return
+    if data is None : return
 
     #ouvrir dialog pour les colonnes
     dialog = GetColumns(controller.mainWindow, columns, confiance)
