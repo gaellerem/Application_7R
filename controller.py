@@ -1,12 +1,13 @@
 import os
 import pandas as pd
 from PySide6.QtCore import QObject
-from PySide6.QtWidgets import QWidget, QPushButton, QLineEdit, QTextEdit, QFileDialog, QInputDialog, QMessageBox
+from PySide6.QtWidgets import QLineEdit, QTextEdit, QFileDialog, QInputDialog, QMessageBox
 from models.mailManager import MailManager
 from models.compta import Compta
 from models.exports import EXP
 from models.settings import Settings
 from view.main_window import MainWindow
+from utilitaires.gw import gw
 from utilitaires.maj import get_maj
 from utilitaires.imports import chessex, invoice_item, open_orders
 from utilitaires.wpn import exp_wpn
@@ -45,8 +46,8 @@ class Controller(QObject):
 
         self.mainWindow.ui.wpn_start.clicked.connect(lambda:exp_wpn(self))
         
+        self.mainWindow.ui.gw_start.clicked.connect(lambda:gw(self))
 
-        self.settings_widget = self.mainWindow.findChild(QWidget, 'settings')
         self.settings_widget = self.mainWindow.ui.settings
 
     def handleExport(self, button):
