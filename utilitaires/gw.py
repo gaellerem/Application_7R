@@ -1,7 +1,8 @@
-from openpyxl import load_workbook
 import os
+from openpyxl import load_workbook
 import pandas as pd
-from PySide6.QtWidgets import QFileDialog, QMessageBox
+from PySide6.QtWidgets import QFileDialog, QDialog
+from view.mailDialog import MailDialog
 
 def define_quantity(row):
     qte = int(row['Qté'])
@@ -41,20 +42,37 @@ def gw(controller):
         if ref in quantities:
             row[6].value = quantities[ref]
 
-    # filePath = os.path.join(pathDesktop, "Commande GW.xlsx")
-    # wb.save(filePath)
-    wb.save()
+    filePath = os.path.join(pathDesktop, "Commande.xlsx")
+    wb.save(filePath)
     wb.close()
-    controller.mail.send_email(
-        fromAddress=controller.globalSettings.get("gw_from"),
-        toAddress=controller.globalSettings.get("gw_to"),
-        subject="Commande GW",
-        body="Bonjour,\nCi-joint la commande de la semaine.\nBonne réception,\nHugo.",
-        attachments=[priceFilePath]
+
+    toAdress = controller.globalSettings.get("gw_to", "")
+    name = toAdress.split(".")[0]
+    subject = "Les 7 Royaumes - Nouvelle Commande CDF-XXXX"
+    body = (
+        f"Bonjour {name.title()} :)\n\n"
+        f"Voici en pièce jointe, ma commande de réassort & nouveautés.\n"
+        f"Merci d'en accuser bonne réception.\n"
+        f"Si besoin je suis disponible au 0476545835 ou en réponse à ce mail pour en discuter.\n\n"
+        f"Bien cordialement, Hugo.\n- Force & Honneur !"
     )
+    attachments = [filePath]
+
+    mailDialog = MailDialog(subject, body, attachments, controller.mainWindow)
+    if mailDialog.exec() == QDialog.Accepted:
+        # Récupérer les valeurs mises à jour
+        subject, body = mailDialog.get_mail_content()
+        controller.mail.send_email(
+            fromAddress=controller.globalSettings.get("gw_from", ""),
+            toAddress=toAdress,
+            subject=subject,
+            body=body,
+            attachments=attachments
+        )
+
     controller.mail.send_email(
-        fromAddress=controller.globalSettings.get("gw_from"),
-        toAddress=controller.globalSettings.get("gw_errors_to"),
+        fromAddress=controller.globalSettings.get("gw_from", ""),
+        toAddress=controller.globalSettings.get("gw_errors_to", ""),
         subject="Erreur références GW",
         body="Bonjour,\nLes références suivantes n'ont pas été trouvées: \n -" + "\n -".join(unfoundRefs)
     )

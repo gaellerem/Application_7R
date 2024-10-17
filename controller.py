@@ -45,7 +45,7 @@ class Controller(QObject):
         self.mainWindow.exp_btns.buttonClicked.connect(self.handleExport)
 
         self.mainWindow.ui.wpn_start.clicked.connect(lambda:exp_wpn(self))
-        
+
         self.mainWindow.ui.gw_start.clicked.connect(lambda:gw(self))
 
         self.settings_widget = self.mainWindow.ui.settings
@@ -112,7 +112,7 @@ class Controller(QObject):
 
     def load_xls(self, filePath, **kwargs):
         if not filePath:
-            path = self.localSettings.get("path_desktop")
+            path = self.localSettings.get("path_desktop", "")
             filePath, _ = QFileDialog.getOpenFileName(
                 dir=path,
                 filter=(

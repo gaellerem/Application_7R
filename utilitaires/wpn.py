@@ -1,5 +1,7 @@
 import os
 import pandas as pd
+from PySide6.QtWidgets import QDialog
+from view.mailDialog import MailDialog
 
 TYPES = {
         "Date et heure du document": str,
@@ -43,14 +45,20 @@ def exp_wpn(controller):
         file_name = "5783_Les7Royaumes_POSData_" + month + year[-2:] + ".csv"
 
         wpn_file.to_csv(os.path.join(pathDesktop, file_name), index=False, sep=";", encoding="utf-8")
+        subject = "WPN POS DATA 5783"
         body = "Bonjour,\nVoici le fichier demandé.\nBonne réception,\nHugo."
         attachments = [os.path.join(pathDesktop, file_name)]
-        controller.mail.send_email(
-            fromAddress=controller.globalSettings.get("wpn_from"),
-            toAddress=controller.globalSettings.get("wpn_to"),
-            subject="WPN POS DATA 5783",
-            body=body,
-            attachments=attachments
-        )
+
+        mailDialog = MailDialog(subject, body, attachments, controller.mainWindow)
+        if mailDialog.exec() == QDialog.Accepted:
+            # Récupérer les valeurs mises à jour
+            subject, body = mailDialog.get_mail_content()
+            controller.mail.send_email(
+                fromAddress=controller.globalSettings.get("wpn_from"),
+                toAddress=controller.globalSettings.get("wpn_to"),
+                subject=subject,
+                body=body,
+                attachments=attachments
+            )
 
 

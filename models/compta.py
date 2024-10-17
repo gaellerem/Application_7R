@@ -3,9 +3,10 @@ import calendar
 import locale
 import numpy as np
 import os
-from PySide6.QtWidgets import QMessageBox, QFileDialog
+from PySide6.QtWidgets import QMessageBox, QFileDialog, QDialog
 from pandas import DataFrame
 import pandas as pd
+from view.mailDialog import MailDialog
 
 
 class Compta():
@@ -33,16 +34,21 @@ class Compta():
 
                 locale.setlocale(locale.LC_ALL, 'fr_FR')
                 nom_mois = calendar.month_name[self.month]
+                subject = f"Fichiers {nom_mois}"
                 body = get_mail(self.rgm_multiple, nom_mois)
                 attachments = [f"{self.directory}/{file}.csv" for file in self.attachments]
 
-                self.controller.mail.send_email(
-                    fromAddress=self.controller.globalSettings.get("compta_from"),
-                    toAddress=self.controller.globalSettings.get("compta_to"),
-                    subject=f"Fichiers {nom_mois}",
-                    body=body,
-                    attachments=attachments
-                )
+                mailDialog = MailDialog(subject, body, attachments, self.controller.mainWindow)
+                if mailDialog.exec() == QDialog.Accepted:
+                    # Récupérer les valeurs mises à jour
+                    subject, body = mailDialog.get_mail_content()
+                    self.controller.mail.send_email(
+                        fromAddress=self.controller.globalSettings.get("compta_from", ""),
+                        toAddress=self.controller.globalSettings.get("compta_to", ""),
+                        subject=subject,
+                        body=body,
+                        attachments=attachments
+                    )
 
         except Exception as e:
             QMessageBox.critical(
@@ -59,7 +65,7 @@ class Compta():
             self.lettrage = pd.read_csv(
                 self.file_path, encoding="ISO-8859-1", sep=";", dtype={"Document": str}).dropna(how="all")
             self.lettrage["Date"] = pd.to_datetime(
-                self.lettrage["Date"], format="%d/%m/%Y %H:%M:%S")
+                self.lettrage["Date"], format="%d/%m/%Y %H:%M")
             self.lettrage = self.lettrage.sort_values(
                 by="Date", ascending=False)
             self.lettrage["Document"] = self.lettrage["Document"].str.replace(
@@ -130,18 +136,23 @@ class Compta():
         while self.od is None:
             self.od = self.controller.load_csv(
                 encoding="ISO-8859-1", header=None, dtype={0: str})
+
         self.ventes = get_file("VENTES")
         while self.ventes is None:
             self.ventes = self.controller.load_csv(
                 encoding="ISO-8859-1", header=None, dtype={0: str})
+
         self.banques = get_file("BANQUES")
         while self.banques is None:
             self.banques = self.controller.load_csv(
                 encoding="ISO-8859-1", header=None, dtype={0: str})
+
         self.caisses = get_file("CAISSES")
         while self.caisses is None:
             self.caisses = self.controller.load_csv(
                 encoding="ISO-8859-1", header=None, dtype={0: str})
+
+        #mettre en capitale
         self.ventes[6] = self.ventes[6].str.upper()
 
         # tri par date et référence (rgm ou fac)
