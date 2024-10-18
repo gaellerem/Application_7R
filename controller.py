@@ -19,15 +19,13 @@ class Controller(QObject):
         super().__init__()
         self.localSettinsgWidgets = ["path_desktop"]
         self.localSettings = Settings(APP_DATA)
-        self.globalSettings = Settings(APP_PATH)
+        self.globalSettings = Settings('')
         self.mainWindow: MainWindow = mainWindow
         self.export = EXP(self)
         self.compta = Compta(self)
         self.mail = MailManager(APP_PATH, self)
         self.setup_ui()
         self.load_settings()
-
-        # list(ast.literal_eval(self.globalSettings.get("dispo_dispo")))
 
     def setup_ui(self):
         self.mainWindow.ui.save_settings.clicked.connect(

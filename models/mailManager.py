@@ -17,11 +17,11 @@ class MailManager:
         self.passwordFRN = controller.globalSettings.get('password_frn')
         self.displayName = controller.globalSettings.get('displayName')
 
-    def send_email(self, fromAddress, toAddress, subject, body, attachments=None):
+    def send_email(self, fromAdress, toAdress, subject, body, attachments=None):
         # Construire le message email
         msg = MIMEMultipart()
-        msg['From'] = f"{self.displayName} <{fromAddress}>"
-        msg['To'] = toAddress
+        msg['From'] = f"{self.displayName} <{fromAdress}>"
+        msg['To'] = toAdress
         msg['Subject'] = subject
         msg.attach(MIMEText(body, 'plain'))
 
@@ -34,7 +34,7 @@ class MailManager:
                 part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(file)}')
                 msg.attach(part)
 
-        if "commande.fournisseur" in fromAddress:
+        if "commande.fournisseur" in fromAdress:
             password = self.passwordFRN
         else:
             password = self.password
@@ -42,10 +42,10 @@ class MailManager:
         try:
             server = smtplib.SMTP(self.smtpServer, self.smtpPort)
             server.starttls()  # Démarrer le mode TLS
-            server.login(fromAddress, password)
+            server.login(fromAdress, password)
             text = msg.as_string()
-            server.sendmail(fromAddress, toAddress, text)
-            QMessageBox.information(self.controller.mainWindow, "Succès", f"L'email a été envoyé avec succès à {toAddress}.")
+            server.sendmail(fromAdress, toAdress, text)
+            QMessageBox.information(self.controller.mainWindow, "Succès", f"L'email a été envoyé avec succès à {toAdress}.")
         except Exception as e:
             QMessageBox.critical(self.controller.mainWindow, "Erreur", f"Une erreur s'est produite lors de l'envoi de l'e-mail : {e}")
         finally:

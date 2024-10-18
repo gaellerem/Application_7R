@@ -6,7 +6,7 @@ import os
 from PySide6.QtWidgets import QMessageBox, QFileDialog, QDialog
 from pandas import DataFrame
 import pandas as pd
-from view.mailDialog import MailDialog
+from view.mail_dialog import MailDialog
 
 
 class Compta():
@@ -32,19 +32,21 @@ class Compta():
                 self.get_ods()
                 self.save_all()
 
+                fromAdress=self.controller.globalSettings.get("compta_from", "")
+                toAdress=self.controller.globalSettings.get("compta_to", "")
                 locale.setlocale(locale.LC_ALL, 'fr_FR')
                 nom_mois = calendar.month_name[self.month]
                 subject = f"Fichiers {nom_mois}"
                 body = get_mail(self.rgm_multiple, nom_mois)
                 attachments = [f"{self.directory}/{file}.csv" for file in self.attachments]
 
-                mailDialog = MailDialog(subject, body, attachments, self.controller.mainWindow)
+                mailDialog = MailDialog(subject, body, attachments, fromAdress, toAdress, self.controller.mainWindow)
                 if mailDialog.exec() == QDialog.Accepted:
                     # Récupérer les valeurs mises à jour
-                    subject, body = mailDialog.get_mail_content()
+                    subject, body, fromAdress, toAdress = mailDialog.get_mail_content()
                     self.controller.mail.send_email(
-                        fromAddress=self.controller.globalSettings.get("compta_from", ""),
-                        toAddress=self.controller.globalSettings.get("compta_to", ""),
+                        fromAdress=fromAdress,
+                        toAdress=toAdress,
                         subject=subject,
                         body=body,
                         attachments=attachments
@@ -64,8 +66,7 @@ class Compta():
         if self.file_path:
             self.lettrage = pd.read_csv(
                 self.file_path, encoding="ISO-8859-1", sep=";", dtype={"Document": str}).dropna(how="all")
-            self.lettrage["Date"] = pd.to_datetime(
-                self.lettrage["Date"], format="%d/%m/%Y %H:%M")
+            self.lettrage["Date"] = pd.to_datetime(self.lettrage["Date"], dayfirst=True, errors='coerce')
             self.lettrage = self.lettrage.sort_values(
                 by="Date", ascending=False)
             self.lettrage["Document"] = self.lettrage["Document"].str.replace(

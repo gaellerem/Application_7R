@@ -2,7 +2,7 @@ import os
 from openpyxl import load_workbook
 import pandas as pd
 from PySide6.QtWidgets import QFileDialog, QDialog
-from view.mailDialog import MailDialog
+from view.mail_dialog import MailDialog
 
 def define_quantity(row):
     qte = int(row['Qté'])
@@ -46,6 +46,7 @@ def gw(controller):
     wb.save(filePath)
     wb.close()
 
+    fromAdress=controller.globalSettings.get("gw_from", "")
     toAdress = controller.globalSettings.get("gw_to", "")
     name = toAdress.split(".")[0]
     subject = "Les 7 Royaumes - Nouvelle Commande CDF-XXXX"
@@ -58,21 +59,21 @@ def gw(controller):
     )
     attachments = [filePath]
 
-    mailDialog = MailDialog(subject, body, attachments, controller.mainWindow)
+    mailDialog = MailDialog(subject, body, attachments, fromAdress, toAdress, controller.mainWindow)
     if mailDialog.exec() == QDialog.Accepted:
         # Récupérer les valeurs mises à jour
-        subject, body = mailDialog.get_mail_content()
+        subject, body, fromAdress, toAdress = mailDialog.get_mail_content()
         controller.mail.send_email(
-            fromAddress=controller.globalSettings.get("gw_from", ""),
-            toAddress=toAdress,
+            fromAdress=fromAdress,
+            toAdress=toAdress,
             subject=subject,
             body=body,
             attachments=attachments
         )
 
     controller.mail.send_email(
-        fromAddress=controller.globalSettings.get("gw_from", ""),
-        toAddress=controller.globalSettings.get("gw_errors_to", ""),
+        fromAdress=controller.globalSettings.get("gw_from", ""),
+        toAdress=controller.globalSettings.get("gw_errors_to", ""),
         subject="Erreur références GW",
         body="Bonjour,\nLes références suivantes n'ont pas été trouvées: \n -" + "\n -".join(unfoundRefs)
     )
