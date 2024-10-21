@@ -532,7 +532,7 @@ QPushButton{
           <property name="styleSheet">
            <string notr="true"/>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,1,1,1,0">
+          <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,1,1,1,1,0">
            <item>
             <widget class="QPushButton" name="csv_asmodee">
              <property name="minimumSize">
@@ -542,7 +542,14 @@ QPushButton{
               </size>
              </property>
              <property name="text">
-              <string>CSV_Asmodee_Group</string>
+              <string>CSV_Asmodee</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="csv_novalis">
+             <property name="text">
+              <string>CSV_Novalis</string>
              </property>
             </widget>
            </item>
@@ -1320,20 +1327,60 @@ p, li { white-space: pre-wrap; }
                </item>
               </layout>
              </widget>
-             <widget class="QWidget" name="desktop">
+             <widget class="QWidget" name="widget">
               <attribute name="title">
                <string>Bureau</string>
               </attribute>
-              <layout class="QFormLayout" name="formLayout_5">
-               <item row="1" column="0">
+              <layout class="QGridLayout" name="gridLayout">
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="path_desktop">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
                 <widget class="QLabel" name="label_29">
                  <property name="text">
                   <string>Chemin bureau</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="path_desktop"/>
+               <item row="0" column="2">
+                <widget class="QPushButton" name="desktop">
+                 <property name="minimumSize">
+                  <size>
+                   <width>40</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../../resources.qrc">
+                   <normaloff>:/icons/ressources/folder.svg</normaloff>:/icons/ressources/folder.svg</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>24</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <spacer name="verticalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
               </layout>
              </widget>

@@ -11,7 +11,7 @@ TYPES_COLUMNS = {"reference fournisseur" : str,
                  "retour en stock" : str}
 
 
-def get_maj(btn:QPushButton, controller, settings: dict):
+def get_maj(btn:QPushButton, controller, settings: dict, pathDesktop: str):
     def check_fournisseur(row):
         match fournisseur:
             case "tribuo":
@@ -60,7 +60,6 @@ def get_maj(btn:QPushButton, controller, settings: dict):
         return row
 
     fournisseur = btn.objectName()
-    pathDesktop = settings.get("path_desktop")
     filename = settings.get(f"filename_{fournisseur}")
     columns, confiance = valeurs_fournisseurs(fournisseur)
 

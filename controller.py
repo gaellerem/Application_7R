@@ -32,7 +32,7 @@ class Controller(QObject):
             lambda: self.save_settings())
 
         self.mainWindow.maj_btns.buttonClicked.connect(
-            lambda btn: get_maj(btn, self, self.globalSettings))
+            lambda btn: get_maj(btn, self, self.globalSettings, self.localSettings.get("path_desktop", "")))
 
         self.mainWindow.ui.compta_start.clicked.connect(lambda: self.compta.traitement())
 
@@ -46,6 +46,8 @@ class Controller(QObject):
 
         self.mainWindow.ui.gw_start.clicked.connect(lambda:gw(self))
 
+        self.mainWindow.ui.desktop.clicked.connect(self.set_desktop_path)
+
         self.settings_widget = self.mainWindow.ui.settings
 
     def handleExport(self, button):
@@ -54,7 +56,13 @@ class Controller(QObject):
             "csv_asmodee": {
                 "type_export": "ref_qt",
                 "export_type": "csv",
-                "name": "ImportAsmodeeGroup",
+                "name": "ImportAsmodee",
+                "header": ["ProductId", "Quantity", "UnitOfMeasureId", "VariantId"]
+            },
+            "csv_novalis": {
+                "type_export": "ref_qt",
+                "export_type": "csv",
+                "name": "ImportNovalis",
                 "header": ["ProductId", "Quantity", "UnitOfMeasureId", "VariantId"]
             },
             "csv_blackrock": {
@@ -85,6 +93,11 @@ class Controller(QObject):
         if button_name in exp_options:
             options = exp_options[button_name]
             self.export.treatment(**options)
+
+    def set_desktop_path(self):
+        path = QFileDialog.getExistingDirectory()
+        if path:
+            self.mainWindow.ui.path_desktop.setText(path)
 
     def load_settings(self):
         for parameter in self.settings_widget.findChildren(QLineEdit):
@@ -138,7 +151,7 @@ class Controller(QObject):
         return None, filePath
 
     def load_csv(self, **kwargs):
-        filePath, _ = QFileDialog.getOpenFileName(filter=("CSV (*.csv)"))
+        filePath, _ = QFileDialog.getOpenFileName(dir=self.localSettings.get("path_desktop", ""), filter=("CSV (*.csv)"))
 
         if filePath:
             try:
