@@ -17,15 +17,28 @@ def gw(controller):
     if not priceFilePath:
         priceFilePath, _ = QFileDialog.getOpenFileName(filter=("XLS (*.xlsx)"), dir=pathDesktop, caption="Sélectionner la liste de prix")
     try : 
-        priceList = pd.read_excel(priceFilePath, sheet_name=0, header=None, usecols=[5, 9]).dropna(axis=0, how="all")
+        priceList = pd.read_excel(
+            priceFilePath, 
+            sheet_name=0, 
+            header=None, 
+            usecols=[5, 9],
+            dtype={5: str}
+        ).dropna(axis=0, how="all")
         priceList = priceList.iloc[1:]
         priceList.rename(columns={5:"Référence", 9: "Colisage"}, inplace=True)
+        priceList["Référence"] = priceList["Référence"].astype(str)
     except FileNotFoundError:
         return
 
     exportFilePath, _ = QFileDialog.getOpenFileName(filter=("CSV (*.csv)"), dir=pathDesktop, caption="Sélectionner l'export")
     try : 
-        export = pd.read_csv(exportFilePath, sep=";", usecols=["Référence", "Qté"]).dropna(how="all")
+        export = pd.read_csv(
+            exportFilePath, 
+            sep=";", 
+            usecols=["Référence", "Qté"], 
+            dtype={"Référence": str}
+        ).dropna(how="all")
+        export["Référence"] = export["Référence"].astype(str)
     except FileNotFoundError:
         return
 
@@ -33,6 +46,7 @@ def gw(controller):
     unfoundRefs = export[~export['Référence'].isin(results['Référence'])]
     unfoundRefs = unfoundRefs["Référence"].tolist()
     results['Qté'] = results.apply(define_quantity, axis=1)
+    print(", ".join(unfoundRefs))
 
     wb = load_workbook(priceFilePath)
     ws = wb[wb.sheetnames[0]]
