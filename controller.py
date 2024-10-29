@@ -1,11 +1,13 @@
-import ast
+import os
 import pandas as pd
 from PySide6.QtCore import QObject
-from PySide6.QtWidgets import QWidget, QPushButton, QLineEdit, QTextEdit, QFileDialog, QInputDialog, QMessageBox
+from PySide6.QtWidgets import QLineEdit, QTextEdit, QFileDialog, QInputDialog, QMessageBox
 from models.mailManager import MailManager
+from models.compta import Compta
 from models.exports import EXP
 from models.settings import Settings
 from view.main_window import MainWindow
+from utilitaires.gw import gw
 from utilitaires.maj import get_maj
 from utilitaires.imports import chessex, invoice_item, open_orders
 from utilitaires.wpn import exp_wpn
@@ -17,34 +19,36 @@ class Controller(QObject):
         super().__init__()
         self.localSettinsgWidgets = ["path_desktop"]
         self.localSettings = Settings(APP_DATA)
-        self.globalSettings = Settings(APP_PATH)
+        self.globalSettings = Settings('')
         self.mainWindow: MainWindow = mainWindow
         self.export = EXP(self)
-        self.mail = MailManager(APP_PATH)
+        self.compta = Compta(self)
+        self.mail = MailManager(APP_PATH, self)
         self.setup_ui()
         self.load_settings()
 
-        # list(ast.literal_eval(self.globalSettings.get("dispo_dispo")))
-
     def setup_ui(self):
-        self.mainWindow.findChild(QPushButton, 'save_settings').clicked.connect(
+        self.mainWindow.ui.save_settings.clicked.connect(
             lambda: self.save_settings())
 
         self.mainWindow.maj_btns.buttonClicked.connect(
-            lambda btn: get_maj(btn, self, self.globalSettings))
+            lambda btn: get_maj(btn, self, self.globalSettings, self.localSettings.get("path_desktop", "")))
 
-        self.mainWindow.findChild(
-            QPushButton, 'chessex').clicked.connect(lambda: chessex(self))
-        self.mainWindow.findChild(QPushButton, 'invoiceItem').clicked.connect(
-            lambda: invoice_item(self))
-        self.mainWindow.findChild(QPushButton, 'openOrders').clicked.connect(
-            lambda: open_orders(self))
+        self.mainWindow.ui.compta_start.clicked.connect(lambda: self.compta.traitement())
+
+        self.mainWindow.ui.chessex.clicked.connect(lambda: chessex(self))
+        self.mainWindow.ui.invoiceItem.clicked.connect(lambda: invoice_item(self))
+        self.mainWindow.ui.openOrders.clicked.connect(lambda: open_orders(self))
 
         self.mainWindow.exp_btns.buttonClicked.connect(self.handleExport)
 
-        self.mainWindow.findChild(QPushButton, 'wpn_start').clicked.connect(lambda:exp_wpn(self))
+        self.mainWindow.ui.wpn_start.clicked.connect(lambda:exp_wpn(self))
 
-        self.settings_widget = self.mainWindow.findChild(QWidget, 'settings')
+        self.mainWindow.ui.gw_start.clicked.connect(lambda:gw(self))
+
+        self.mainWindow.ui.desktop.clicked.connect(self.set_desktop_path)
+
+        self.settings_widget = self.mainWindow.ui.settings
 
     def handleExport(self, button):
         button_name = button.objectName()
@@ -52,7 +56,13 @@ class Controller(QObject):
             "csv_asmodee": {
                 "type_export": "ref_qt",
                 "export_type": "csv",
-                "name": "ImportAsmodeeGroup",
+                "name": "ImportAsmodee",
+                "header": ["ProductId", "Quantity", "UnitOfMeasureId", "VariantId"]
+            },
+            "csv_novalis": {
+                "type_export": "ref_qt",
+                "export_type": "csv",
+                "name": "ImportNovalis",
                 "header": ["ProductId", "Quantity", "UnitOfMeasureId", "VariantId"]
             },
             "csv_blackrock": {
@@ -84,6 +94,11 @@ class Controller(QObject):
             options = exp_options[button_name]
             self.export.treatment(**options)
 
+    def set_desktop_path(self):
+        path = QFileDialog.getExistingDirectory()
+        if path:
+            self.mainWindow.ui.path_desktop.setText(path)
+
     def load_settings(self):
         for parameter in self.settings_widget.findChildren(QLineEdit):
             if parameter.objectName() in self.localSettinsgWidgets:
@@ -108,7 +123,7 @@ class Controller(QObject):
 
     def load_xls(self, filePath, **kwargs):
         if not filePath:
-            path = self.localSettings.get("path_desktop")
+            path = self.localSettings.get("path_desktop", "")
             filePath, _ = QFileDialog.getOpenFileName(
                 dir=path,
                 filter=(
@@ -132,11 +147,11 @@ class Controller(QObject):
                     return xlsFile.parse(sheetName, **kwargs).dropna(axis=0, how="all").dropna(axis=1, how="all"), filePath
             except Exception as e:
                 QMessageBox.critical(
-                    None, "Erreur", f"Une erreur s'est produite : {e}")
-        return pd.DataFrame(), filePath
+                    self.mainWindow, "Erreur", f"Une erreur s'est produite : {e}")
+        return None, filePath
 
     def load_csv(self, **kwargs):
-        filePath, _ = QFileDialog.getOpenFileName(filter=("CSV (*.csv)"))
+        filePath, _ = QFileDialog.getOpenFileName(dir=self.localSettings.get("path_desktop", ""), filter=("CSV (*.csv)"))
 
         if filePath:
             try:
@@ -144,5 +159,17 @@ class Controller(QObject):
                 return data
             except Exception as e:
                 QMessageBox.critical(
-                    None, "Erreur", f"Une erreur s'est produite : {e}")
+                    self.mainWindow, "Erreur", f"Une erreur s'est produite : {e}")
         return None
+
+    def file_present(self, path, filename):
+        # Liste tous les fichiers dans le chemin spécifié
+        files = os.listdir(path)
+
+        # Vérifie si le nom du fichier partiel correspond à un fichier dans le chemin donné
+        for file in files:
+            if filename in file:
+                return os.path.join(path, file)
+
+        # Si aucun fichier correspondant n'est trouvé
+        return ""

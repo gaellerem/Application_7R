@@ -11,7 +11,7 @@ TYPES_COLUMNS = {"reference fournisseur" : str,
                  "retour en stock" : str}
 
 
-def get_maj(btn:QPushButton, controller, settings: dict):
+def get_maj(btn:QPushButton, controller, settings: dict, pathDesktop: str):
     def check_fournisseur(row):
         match fournisseur:
             case "tribuo":
@@ -60,13 +60,12 @@ def get_maj(btn:QPushButton, controller, settings: dict):
         return row
 
     fournisseur = btn.objectName()
-    pathDesktop = settings.get("path_desktop")
     filename = settings.get(f"filename_{fournisseur}")
     columns, confiance = valeurs_fournisseurs(fournisseur)
 
     filePath = file_present(pathDesktop, filename)
     data, filePath = controller.load_xls(filePath=filePath, header=None, skiprows=1)
-    if data.empty : return
+    if data is None : return
 
     #ouvrir dialog pour les colonnes
     dialog = GetColumns(controller.mainWindow, columns, confiance)
@@ -179,11 +178,11 @@ def valeurs_fournisseurs(fournisseur):
             columns["marque"] = "B"
             confiance = False
         case "neoludis":
-            columns["code_barre"] = "C"
-            columns["reference_fournisseur"] = "A"
-            columns["disponibilite"] = "I"
-            columns["retour_en_stock"] = "J"
-            columns["marque"] = "D"
+            columns["code_barre"] = "K"
+            columns["reference_fournisseur"] = "B"
+            columns["disponibilite"] = "A"
+            columns["retour_en_stock"] = "A"
+            columns["marque"] = "E"
             confiance = True
         case "novalis":
             columns["code_barre"] = "B"
