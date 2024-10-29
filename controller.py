@@ -11,7 +11,7 @@ from utilitaires.gw import gw
 from utilitaires.maj import get_maj
 from utilitaires.imports import chessex, invoice_item, open_orders
 from utilitaires.wpn import exp_wpn
-from config import APP_PATH, APP_DATA
+from config import EXE_PATH, APP_DATA
 
 
 class Controller(QObject):
@@ -19,11 +19,11 @@ class Controller(QObject):
         super().__init__()
         self.localSettinsgWidgets = ["path_desktop"]
         self.localSettings = Settings(APP_DATA)
-        self.globalSettings = Settings('')
+        self.globalSettings = Settings(EXE_PATH)
         self.mainWindow: MainWindow = mainWindow
         self.export = EXP(self)
         self.compta = Compta(self)
-        self.mail = MailManager(APP_PATH, self)
+        self.mail = MailManager(self)
         self.setup_ui()
         self.load_settings()
 

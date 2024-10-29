@@ -7,9 +7,7 @@ import smtplib
 from PySide6.QtWidgets import QMessageBox
 
 class MailManager:
-    def __init__(self, path, controller):
-        # Charger la configuration depuis le fichier JSON
-        self.filename = os.path.join(path, 'mailconfig.json')
+    def __init__(self, controller):
         self.controller = controller
         self.smtpServer = controller.globalSettings.get('smtpServer')
         self.smtpPort = int(controller.globalSettings.get('smtpPort'))
