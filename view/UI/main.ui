@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>549</width>
-    <height>613</height>
+    <width>625</width>
+    <height>648</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>500</width>
+    <width>625</width>
     <height>0</height>
    </size>
   </property>
@@ -347,37 +347,11 @@ QPushButton{
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_8">
            <item>
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
             <widget class="QPushButton" name="compta_start">
              <property name="text">
               <string>Commencer</string>
              </property>
             </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
           </layout>
          </widget>
@@ -459,37 +433,11 @@ QPushButton{
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_10">
            <item>
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
             <widget class="QPushButton" name="wpn_start">
              <property name="text">
               <string>Commencer</string>
              </property>
             </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
           </layout>
          </widget>
@@ -580,11 +528,11 @@ QPushButton{
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="widget_3" native="true">
+         <widget class="QWidget" name="exports" native="true">
           <property name="styleSheet">
            <string notr="true"/>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,1,1,1,0">
+          <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,1,1,1,1,0">
            <item>
             <widget class="QPushButton" name="csv_asmodee">
              <property name="minimumSize">
@@ -594,7 +542,14 @@ QPushButton{
               </size>
              </property>
              <property name="text">
-              <string>CSV_Asmodee_Group</string>
+              <string>CSV_Asmodee</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="csv_novalis">
+             <property name="text">
+              <string>CSV_Novalis</string>
              </property>
             </widget>
            </item>
@@ -821,7 +776,17 @@ QPushButton{
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="widget_8" native="true"/>
+         <widget class="QWidget" name="widget_8" native="true">
+          <layout class="QVBoxLayout" name="verticalLayout_13">
+           <item>
+            <widget class="QPushButton" name="gw_start">
+             <property name="text">
+              <string>Commencer</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -1194,9 +1159,9 @@ p, li { white-space: pre-wrap; }
                </item>
               </layout>
              </widget>
-             <widget class="QWidget" name="others">
+             <widget class="QWidget" name="mails">
               <attribute name="title">
-               <string>Autres</string>
+               <string>Mails</string>
               </attribute>
               <layout class="QFormLayout" name="formLayout_2">
                <property name="horizontalSpacing">
@@ -1206,66 +1171,216 @@ p, li { white-space: pre-wrap; }
                 <number>10</number>
                </property>
                <item row="0" column="0">
+                <widget class="QLabel" name="label_39">
+                 <property name="text">
+                  <string>Serveur SMTP</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="smtpServer"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_40">
+                 <property name="text">
+                  <string>Port SMTP</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="smtpPort"/>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_41">
+                 <property name="text">
+                  <string>Mot de passe</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="password">
+                 <property name="echoMode">
+                  <enum>QLineEdit::Password</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_42">
+                 <property name="text">
+                  <string>Nom affiché</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="displayName"/>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_36">
+                 <property name="text">
+                  <string>Expediteur compta</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QLineEdit" name="compta_from"/>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_32">
+                 <property name="text">
+                  <string>Destinataire compta</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QLineEdit" name="compta_to"/>
+               </item>
+               <item row="8" column="0" colspan="2">
+                <widget class="Line" name="line">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="label_34">
+                 <property name="text">
+                  <string>Expediteur WPN</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QLineEdit" name="wpn_from"/>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLabel" name="label_33">
+                 <property name="text">
+                  <string>Destinataire WPN</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="1">
+                <widget class="QLineEdit" name="wpn_to"/>
+               </item>
+               <item row="11" column="0" colspan="2">
+                <widget class="Line" name="line_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="0">
+                <widget class="QLabel" name="label_35">
+                 <property name="text">
+                  <string>Expediteur GW</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="1">
+                <widget class="QLineEdit" name="gw_from"/>
+               </item>
+               <item row="13" column="0">
+                <widget class="QLabel" name="label_37">
+                 <property name="text">
+                  <string>Destinataire GW</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="1">
+                <widget class="QLineEdit" name="gw_to"/>
+               </item>
+               <item row="14" column="0">
+                <widget class="QLabel" name="label_38">
+                 <property name="text">
+                  <string>Dest. erreurs GW</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="14" column="1">
+                <widget class="QLineEdit" name="gw_errors_to"/>
+               </item>
+               <item row="5" column="0" colspan="2">
+                <widget class="Line" name="line_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_43">
+                 <property name="font">
+                  <font>
+                   <family>Arial</family>
+                   <pointsize>-1</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>MDP compte commande</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLineEdit" name="password_frn">
+                 <property name="echoMode">
+                  <enum>QLineEdit::Password</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="widget">
+              <attribute name="title">
+               <string>Bureau</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout">
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="path_desktop">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
                 <widget class="QLabel" name="label_29">
                  <property name="text">
                   <string>Chemin bureau</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="path_desktop"/>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_32">
+               <item row="0" column="2">
+                <widget class="QPushButton" name="desktop">
+                 <property name="minimumSize">
+                  <size>
+                   <width>40</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <property name="text">
-                  <string>Mail compta</string>
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../../resources.qrc">
+                   <normaloff>:/icons/ressources/folder.svg</normaloff>:/icons/ressources/folder.svg</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>24</width>
+                   <height>24</height>
+                  </size>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1">
-                <widget class="QLineEdit" name="mail_compta"/>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_34">
-                 <property name="text">
-                  <string>Mail WPN</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QLineEdit" name="mail_wpn"/>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_33">
-                 <property name="text">
-                  <string>Mail GW</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QLineEdit" name="mail_gw"/>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_35">
-                 <property name="text">
-                  <string>Mail erreur GW</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="1">
-                <widget class="QLineEdit" name="mail_error_gw"/>
-               </item>
-               <item row="1" column="0" colspan="2">
-                <widget class="Line" name="line">
-                 <property name="styleSheet">
-                  <string notr="true">Line {
-	padding : 4em;
-}</string>
-                 </property>
+               <item row="1" column="0">
+                <spacer name="verticalSpacer">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Vertical</enum>
                  </property>
-                </widget>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
               </layout>
              </widget>
